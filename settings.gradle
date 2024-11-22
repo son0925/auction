@@ -1,1 +1,5 @@
 rootProject.name = 'auction'
+include 'db'
+include 'webserver'
+include 'webapplicationserver'
+
