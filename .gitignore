@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+webapplicationserver/build.gradle
+build.gradle
+webapplicationserver/src/main/resources/application.yaml
+webserver/build.gradle
+webserver/build.gradle
+webapplicationserver/build.gradle
+webserver/src/main/resources/application.yaml
