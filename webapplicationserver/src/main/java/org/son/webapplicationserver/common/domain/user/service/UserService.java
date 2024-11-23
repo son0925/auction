@@ -2,6 +2,8 @@ package org.son.webapplicationserver.common.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.son.db.user.UserEntity;
+import org.son.webapplicationserver.common.domain.user.model.UserLoginRequest;
+import org.son.webapplicationserver.common.domain.user.model.UserResponse;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -9,8 +11,11 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     // 로그인
-    public UserEntity login() {
-        return null;
+    public UserResponse login(UserLoginRequest userLoginRequest) {
+        return UserResponse.builder()
+                .userId(userLoginRequest.getId())
+                .name("테스트 유저입니다.")
+                .build();
     }
 
     // 회원가입
