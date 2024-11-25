@@ -8,8 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.son.webapplicationserver.common.domain.token.helper.JwtTokenHelper;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
 
@@ -22,18 +24,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String requestURI = request.getRequestURI();
+        var url = request.getRequestURI();
 
-        if (requestURI.startsWith("/api/auth/login")) {
+        if (url.startsWith("/open-api")) {
             filterChain.doFilter(request, response);
             return;
         }
+
         String accessToken = getJwtFromRequest(request, "accessToken");
 
         // 유효성 체크
         if (accessToken != null && jwtTokenHelper.validateToken(accessToken)) {
             String userId = jwtTokenHelper.getUserIdFromToken(accessToken);
 
+//            setAuthentication(userId);
             // TODO 추가적인 인증 정보 설정
         }
         // accessToken 없거나 유효하지 않을 때 refreshToken 유효성 검사
@@ -44,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String userId = jwtTokenHelper.getUserIdFromToken(refreshToken);
                 String newAccessToken = jwtTokenHelper.createAccessToken(userId);
 
-
+//                setAuthentication(userId);
                 addAccessTokenToCookie(response, newAccessToken);
             }
             // refreshToken 없거나 유효하지 않으면 인증 실패 처리
@@ -56,6 +60,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
+    /*private void setAuthentication(String userId) {
+        // ROLE_USER 역할 부여
+
+        // 사용자 식별, 인증된 사용자의 자격 증명, 권한 리스트
+        var authentication = new UsernamePasswordAuthenticationToken(userId
+                , null
+                , Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }*/
 
     private String getJwtFromRequest(HttpServletRequest request, String key) {
         String bearerToken = request.getHeader(key);

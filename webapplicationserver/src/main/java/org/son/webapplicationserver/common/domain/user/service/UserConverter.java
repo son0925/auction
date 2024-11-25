@@ -11,6 +11,7 @@ public class UserConverter {
         return UserResponse.builder()
                 .userId(userEntity.getId())
                 .name(userEntity.getName())
+                .profileImageUrl(userEntity.getProfileImageUrl())
                 .build()
                 ;
     }
