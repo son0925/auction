@@ -41,7 +41,7 @@ public class UserService {
         var userEntity = findByUserIdWithThrow(userId);
 
         // 비밀번호가 맞는지
-        if (!passwordEncoder.matches(userEntity.getPassword(), password)) {
+        if (!passwordEncoder.matches(password, userEntity.getPassword())) {
             throw new ApiException(UserErrorCode.ID_PASSWORD_WRONG);
         }
 
@@ -132,9 +132,8 @@ public class UserService {
     }
 
 
-    private UserEntity findByUserIdWithThrow(String userId) {
+    public UserEntity findByUserIdWithThrow(String userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(UserErrorCode.USER_NOT_FOUND));
     }
-
 }

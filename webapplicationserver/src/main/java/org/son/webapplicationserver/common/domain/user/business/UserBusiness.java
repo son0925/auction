@@ -10,6 +10,7 @@ import org.son.webapplicationserver.common.domain.user.service.UserConverter;
 import org.son.webapplicationserver.common.domain.user.service.UserService;
 import org.son.webapplicationserver.common.error.ErrorCode;
 import org.son.webapplicationserver.customexception.ApiException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -34,6 +35,7 @@ public class UserBusiness {
     }
 
     // 회원가입
+    @Transactional
     public UserResponse register(UserRegisterRequest userRegisterRequest) {
         var entity = userService.register(userRegisterRequest);
 
@@ -41,8 +43,10 @@ public class UserBusiness {
     }
 
     // 회원 정보
-    public UserResponse info() {
-        return null;
+    public UserResponse info(String userId) {
+        var entity = userService.findByUserIdWithThrow(userId);
+
+        return userConverter.toResponse(entity);
     }
 
     // 회원 정보 수정
